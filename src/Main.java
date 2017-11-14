@@ -47,13 +47,28 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	
 	// reference other canvases for instances of the different effects
 	
-	
 	ButtonGroup effects = new ButtonGroup();
 	JRadioButton star = new JRadioButton("Star");
 	JRadioButton circles = new JRadioButton("Circles");
 	JRadioButton square = new JRadioButton("Square");
 	JRadioButton burst = new JRadioButton("Burst");
 	JRadioButton bubble = new JRadioButton("Split");
+	
+	JFrame frame = new JFrame("Main");
+	JPanel colorGUI = new JPanel();
+	JPanel effectGUI = new JPanel();
+	JPanel speedGUI = new JPanel();
+	JPanel angleGUI = new JPanel();
+	JPanel topGUI = new JPanel();
+	JPanel bottomGUI = new JPanel();
+	
+	int x, y;
+	int ttb; // Time to Boom
+	int t; // Current time
+	int angle;
+	// will be used for location of drawings.
+	
+	
 	
 	public Main() {
 		colors.add(black);
@@ -69,14 +84,6 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		effects.add(square);
 		effects.add(burst);
 		effects.add(bubble);
-		
-		JFrame frame = new JFrame("Main");
-		JPanel colorGUI = new JPanel();
-		JPanel effectGUI = new JPanel();
-		JPanel speedGUI = new JPanel();
-		JPanel angleGUI = new JPanel();
-		JPanel topGUI = new JPanel();
-		JPanel bottomGUI = new JPanel();
 		
 		frame.setLayout(new BorderLayout());
 		frame.setSize(1280, 1000);
@@ -125,6 +132,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		bottomGUI.add(timeSel);
 		timeSel.addChangeListener(this);
 		bottomGUI.add(fire, BorderLayout.PAGE_END);
+		fire.addActionListener(this);
 		bottomGUI.setPreferredSize(new Dimension(frame.getWidth(), 75));
 		frame.add(bottomGUI, BorderLayout.PAGE_END);
 		
@@ -132,7 +140,6 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		topGUI.setVisible(true);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
 		
 	}
 
@@ -151,10 +158,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	public void stateChanged(ChangeEvent e) {
 		// pass to some variable for render
 		if (e.getSource() == timeSel) {
+			ttb = timeSel.getValue();
 			timeCount.setText(Integer.toString(timeSel.getValue()));
-			
 		} else if (e.getSource() == fireAngle) {
 			angleCount.setText(Integer.toString(fireAngle.getValue()));
+			angle = fireAngle.getValue();
 		} else {
 			speedCount.setText(Integer.toString(speed.getValue()));
 		}
@@ -163,7 +171,25 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getSource() == fire) {
+			System.out.println("fire");
+			// pass variables to canvas
+		} else if (e.getSource() == star) {
+			Star starCanvas = new Star();
+			frame.add(starCanvas);
+		} else if (e.getSource() == circles) {
+			Circles circleCanvas = new Circles(x, y, angle);
+			frame.add(circleCanvas);
+		} else if (e.getSource() == square) {
+			Square squareCanvas = new Square();
+			frame.add(squareCanvas);			
+		} else if (e.getSource() == burst) {
+			Burst burstCanvas = new Burst();
+			frame.add(burstCanvas);
+		} else if (e.getSource() == bubble) {
+			Bubble bubbleCanvas = new Bubble();
+			frame.add(bubbleCanvas);
+		}
 		
 	}
 
