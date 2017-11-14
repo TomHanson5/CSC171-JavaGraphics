@@ -18,7 +18,7 @@ public class Circles extends JPanel{
 	}
 	
 	public void Boom() {
-		boom = false;
+		boom = true;
 		repaint();
 	}
 	
@@ -26,11 +26,23 @@ public class Circles extends JPanel{
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(c);
-		if (!boom) {
-			g2.fillOval(x-r, y-r, r*2, r*2);
-		} else {
-			// draw resulting effect
+		int x2 = 0;
+		int y2 = 0;
+		for (int i = 0; i < x; i++) {
+			g2.fillOval(x2-r, y2-r, r*2, r*2);
+			if (y2 > y) {
+				y--;
+				x++;
+			} else if (y2 < y){
+				x2++;
+				y2++;
+			}
+			
 		}
+		
+		if (boom) {
+			// draw resulting effect
+		} 
 		
 	}
 

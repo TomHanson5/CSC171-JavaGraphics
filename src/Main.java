@@ -24,6 +24,8 @@ import javax.swing.event.ChangeListener;
 // needs classes for rendering, passing of GUI inputs to determine correct thing to render
 // ec? splitting projectile?
 
+// idea for line drawing: get the x and y of explosion, then go from 0 to that number incrementing by whatever value
+// then each time draw a circle for the track, stop when both current x and y are equal to or greater than the explosion x and y
 public class Main extends JFrame implements ActionListener, ChangeListener, ItemListener{
 	Color[] colorRef = {Color.BLACK, Color.BLUE, Color.CYAN, Color.PINK, Color.GREEN, Color.ORANGE, Color.RED};
 	ButtonGroup colors = new ButtonGroup();
@@ -174,9 +176,12 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		if (e.getSource() == fire) {
 			System.out.println("fire");
 			// pass variables to canvas
-		} else if (e.getSource() == star) {
-			Star starCanvas = new Star();
-			frame.add(starCanvas);
+			// need to make it show up only when this is
+		}
+		 if (e.getSource() == star) {
+			Star c = new Star();
+			frame.add(c);
+			System.out.println("star");
 		} else if (e.getSource() == circles) {
 			Circles circleCanvas = new Circles(x, y, angle);
 			frame.add(circleCanvas);
