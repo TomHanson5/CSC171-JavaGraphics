@@ -18,17 +18,21 @@ import javax.swing.ButtonGroup;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-// needs classes for rendering, passing of GUI inputs to determine correct thing to render
-// ec? splitting projectile?
+/**
+* Thomas Hanson; thanson5; Project 3; Sec. TR 6:15-7:30
+* I did not collaborate with anyone on this assignment
+* This is the central class which holds most of the code and creates instances of the effects canvases
+* Most things are initialized as class variables and the constructor adds them together and to the GUI
+* The main method simply calls the constructor which then readies the GUI for use
+*/
 
-// idea for line drawing: get the x and y of explosion, then go from 0 to that number incrementing by whatever value
-// then each time draw a circle for the track, stop when both current x and y are equal to or greater than the explosion x and y
+@SuppressWarnings("serial")
 public class Main extends JFrame implements ActionListener, ChangeListener{
-	Color[] colorRef = {Color.BLACK, Color.BLUE, Color.CYAN, Color.PINK, Color.GREEN, Color.ORANGE, Color.RED};
 	static Color colorChoice;
 	
+	// Color choosing buttons
 	ButtonGroup colors = new ButtonGroup();
-	JRadioButton black = new JRadioButton("Black");
+	JRadioButton white = new JRadioButton("White");
 	JRadioButton blue = new JRadioButton("Blue");
 	JRadioButton cyan = new JRadioButton("Cyan");
 	JRadioButton pink = new JRadioButton("Pink");
@@ -36,6 +40,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	JRadioButton orange = new JRadioButton("Orange");
 	JRadioButton red = new JRadioButton("Red");
 	
+	// Parameters for Launch
 	JSlider speed = new JSlider(1);
 	JLabel speedCount = new JLabel("50");
 	
@@ -46,6 +51,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	JLabel timeCount = new JLabel("3");
 	JButton fire = new JButton("Fire!");
 	
+	// Buttons for effects
 	ButtonGroup effects = new ButtonGroup();
 	JRadioButton star = new JRadioButton("Star");
 	JRadioButton circles = new JRadioButton("Circles");
@@ -53,6 +59,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	JRadioButton flower = new JRadioButton("Flower");
 	JRadioButton bubble = new JRadioButton("Bubble");
 	
+	// GUI organization
 	JFrame frame = new JFrame("Main");
 	JPanel colorGUI = new JPanel();
 	JPanel effectGUI = new JPanel();
@@ -61,28 +68,40 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	JPanel topGUI = new JPanel();
 	JPanel bottomGUI = new JPanel();
 	
+	// vars for math
 	public static int x, y;
 	public static int t = 1; // Time to Boom
 	public static int angle = 45;
 	public static int v = 500; // speed
 	public static final double g = 9.81;
-	// will be used for location of drawings.
 
+	// Instances of the effect canvases
 	Bubble bub = new Bubble();
 	Flower flw = new Flower();
 	Square squ = new Square();
 	Star str = new Star();
 	Circles c = new Circles();
 	
-	public Main() {		
-		colors.add(black);
+	public Main() {
+		// Adding color buttons to group
+		colors.add(white);
 		colors.add(blue);
 		colors.add(cyan);
 		colors.add(pink);
 		colors.add(green);
 		colors.add(orange);
 		colors.add(red);
-
+		
+		// adding action listeners
+		white.addActionListener(this);
+		blue.addActionListener(this);
+		cyan.addActionListener(this);
+		pink.addActionListener(this);
+		green.addActionListener(this);
+		orange.addActionListener(this);
+		red.addActionListener(this);
+		
+		// adding effect buttons to group
 		effects.add(star);
 		effects.add(circles);
 		effects.add(square);
@@ -94,9 +113,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		
 		topGUI.setLayout(new BoxLayout(topGUI, BoxLayout.Y_AXIS));
 		
+		// adding GUI elements to top of screen
+		// color buttons
 		colorGUI.setLayout(new FlowLayout());
 		colorGUI.setPreferredSize(new Dimension(frame.getWidth(), 30));
-		colorGUI.add(black);
+		colorGUI.add(white);
 		colorGUI.add(blue);
 		colorGUI.add(cyan);
 		colorGUI.add(pink);
@@ -105,6 +126,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		colorGUI.add(red);
 		topGUI.add(colorGUI);
 		
+		// effect buttons
 		effectGUI.setLayout(new FlowLayout());
 		effectGUI.setPreferredSize(new Dimension(frame.getWidth(), 30));
 		effectGUI.add(star);
@@ -115,14 +137,15 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		topGUI.add(effectGUI);
 		frame.add(topGUI, BorderLayout.PAGE_START);
 		
-		// need set of buttons for effects
+		// speed slider
 		speedGUI.setLayout(new BorderLayout());
 		speedGUI.add(new JLabel("Speed"), BorderLayout.PAGE_START);
 		speedGUI.add(speed, BorderLayout.CENTER);
 		speedGUI.add(speedCount, BorderLayout.EAST);
 		frame.add(speedGUI, BorderLayout.WEST);
 		speed.addChangeListener(this);
-
+		
+		//angle slider
 		angleGUI.setLayout(new BorderLayout());
 		angleGUI.add(fireAngle, BorderLayout.CENTER);
 		angleGUI.add(new JLabel("Angle"), BorderLayout.PAGE_START);
@@ -130,6 +153,8 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		frame.add(angleGUI, BorderLayout.EAST);
 		fireAngle.addChangeListener(this);
 		
+		// GUI for bottom part of screen
+		//Timer and fire button
 		bottomGUI.setLayout(new BorderLayout());
 		bottomGUI.add(new JLabel("Fuse Timer"), BorderLayout.WEST);
 		bottomGUI.add(timeCount, BorderLayout.EAST);
@@ -154,6 +179,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
+		// set variable to slider value
 		if (e.getSource() == timeSel) {
 			t = timeSel.getValue();
 			timeCount.setText(Integer.toString(timeSel.getValue()));
@@ -165,9 +191,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 			v =10* speed.getValue();
 		}
 		
+		
 	}
 
 	public void removeParts() {
+		// removes old effect canvas so it can add the newly selected one
 		frame.setVisible(false);
 		frame.remove(c);
 		frame.remove(str);
@@ -179,10 +207,12 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fire) {
+			// calculate location of explosion
 			x = (int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
 			y = (int) ((v * Math.sin(Math.toRadians((double)angle)) * t) - (.5*g*Math.pow(t, 2)));
 			
 			removeParts();
+			// add correct effect canvas
 			if(effects.getSelection() == circles.getModel()) {
 				frame.add(c);
 				c.setVisible(true);
@@ -200,6 +230,21 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 				bub.setVisible(true);
 			}
 			frame.setVisible(true);
+		// set color according to buttons
+		} else if (e.getSource() == white) {
+			colorChoice = Color.WHITE;
+		} else if (e.getSource() == blue) {
+			colorChoice = Color.BLUE;
+		} else if (e.getSource() == cyan) {
+			colorChoice = Color.CYAN;
+		} else if (e.getSource() == pink) {
+			colorChoice = Color.PINK;
+		} else if (e.getSource() == green) {
+			colorChoice = Color.GREEN;
+		} else if (e.getSource() == orange) {
+			colorChoice = Color.ORANGE;
+		} else if (e.getSource() == red) {
+			colorChoice = Color.RED;
 		}
 		
 	}
