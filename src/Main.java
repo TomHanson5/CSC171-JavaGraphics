@@ -2,24 +2,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.Timer;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -29,8 +23,10 @@ import javax.swing.event.ChangeListener;
 
 // idea for line drawing: get the x and y of explosion, then go from 0 to that number incrementing by whatever value
 // then each time draw a circle for the track, stop when both current x and y are equal to or greater than the explosion x and y
-public class Main extends JFrame implements ActionListener, ChangeListener, ItemListener{
+public class Main extends JFrame implements ActionListener, ChangeListener{
 	Color[] colorRef = {Color.BLACK, Color.BLUE, Color.CYAN, Color.PINK, Color.GREEN, Color.ORANGE, Color.RED};
+	Color colorChoice;
+	
 	ButtonGroup colors = new ButtonGroup();
 	JRadioButton black = new JRadioButton("Black");
 	JRadioButton blue = new JRadioButton("Blue");
@@ -50,8 +46,6 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	JLabel timeCount = new JLabel("3");
 	JButton fire = new JButton("Fire!");
 	
-	// reference other canvases for instances of the different effects
-	
 	ButtonGroup effects = new ButtonGroup();
 	JRadioButton star = new JRadioButton("Star");
 	JRadioButton circles = new JRadioButton("Circles");
@@ -67,20 +61,20 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	JPanel topGUI = new JPanel();
 	JPanel bottomGUI = new JPanel();
 	
-	public int x, y;
+	public static int x, y;
 	public static int t = 1; // Time to Boom
-	public int angle = 45;
+	public static int angle = 45;
 	public static int v = 1000; // speed
 	public static final double g = 9.81;
 	// will be used for location of drawings.
+
+	Bubble bub = new Bubble();
+	Burst bur = new Burst();
+	Square squ = new Square();
+	Star str = new Star();
+	Circles c = new Circles();
 	
-	Timer time = new Timer(30, this);
-	
-	
-	
-	public Main() {
-		time.setRepeats(true);
-		
+	public Main() {		
 		colors.add(black);
 		colors.add(blue);
 		colors.add(cyan);
@@ -96,7 +90,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		effects.add(bubble);
 		
 		frame.setLayout(new BorderLayout());
-		frame.setSize(1920, 1080);
+		frame.setSize(1800, 1000);
 		
 		topGUI.setLayout(new BoxLayout(topGUI, BoxLayout.Y_AXIS));
 		
@@ -152,13 +146,6 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
-
-	public class drawer extends JPanel {
-		@Override
-		public void paintComponent(Graphics g) {
-			
-		}
-	}
 	
 	public static void main(String[] args) {
 		new Main();
@@ -166,14 +153,8 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void stateChanged(ChangeEvent e) {
-		// pass to some variable for render
+		System.out.println(e.getSource());
 		if (e.getSource() == timeSel) {
 			t = timeSel.getValue();
 			timeCount.setText(Integer.toString(timeSel.getValue()));
@@ -190,36 +171,30 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fire) {
-			x =(int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
+			x = (int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
 			y = (int) ((v * Math.sin(Math.toRadians((double)angle)) * t) - (.5*g*Math.pow(t, 2)));
 			
 			if(effects.getSelection() == circles.getModel()) {
-				Circles c = new Circles(x, y, angle);
 				c.setBackground(Color.WHITE);
-				frame.add(c, BorderLayout.CENTER);
+				frame.add(c);
+				frame.setVisible(false);
 				c.setVisible(true);
-				c.repaint();
+				frame.setVisible(true);
 			} else if (effects.getSelection() == star.getModel()) {
-				Star c = new Star();
-				frame.add(c);
-				c.setVisible(true);
+				frame.add(str);
+				str.setVisible(true);
 			} else if (effects.getSelection() == square.getModel()) {
-				Square c = new Square();
-				frame.add(c, BorderLayout.CENTER);
-				c.setVisible(true);
+				frame.add(squ);
+				squ.setVisible(true);
 			} else if (effects.getSelection() == burst.getModel()) {
-				Burst c = new Burst();
-				frame.add(c);
-				c.setVisible(true);
+				frame.add(bur);
+				bur.setVisible(true);
 			} else {
-				Bubble c = new Bubble();
-				frame.add(c);
-				c.setVisible(true);
+				frame.add(bub);
+				bub.setVisible(true);
 			}
-			time.start();
-		} else if (e.getSource() == time) {
-			
 		}
+		System.out.println(e.getSource());
 		
 	}
 
