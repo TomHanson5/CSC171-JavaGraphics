@@ -64,10 +64,11 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	JPanel topGUI = new JPanel();
 	JPanel bottomGUI = new JPanel();
 	
-	int x, y;
-	int ttb; // Time to Boom
-	int t; // Current time
+	double x, y;
+	int t; // Time to Boom
 	int angle;
+	int v; // speed
+	double g = -9.81;
 	// will be used for location of drawings.
 	
 	
@@ -160,13 +161,14 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	public void stateChanged(ChangeEvent e) {
 		// pass to some variable for render
 		if (e.getSource() == timeSel) {
-			ttb = timeSel.getValue();
+			t = timeSel.getValue();
 			timeCount.setText(Integer.toString(timeSel.getValue()));
 		} else if (e.getSource() == fireAngle) {
 			angleCount.setText(Integer.toString(fireAngle.getValue()));
 			angle = fireAngle.getValue();
 		} else {
 			speedCount.setText(Integer.toString(speed.getValue()));
+			v = speed.getValue();
 		}
 		
 	}
@@ -174,28 +176,33 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fire) {
-			System.out.println("fire");
+			x = v * Math.cos(Math.toRadians((double)angle)) * t;
+			y = v * Math.sin(Math.toRadians((double)angle)) * t - (.5*g*Math.pow(t, 2));
+			
+			if(effects.getSelection() == circles.getModel()) {
+				Circles c = new Circles(x, y, angle);
+				frame.add(c, BorderLayout.CENTER);
+				c.setVisible(true);
+			} else if (effects.getSelection() == star.getModel()) {
+				Star c = new Star();
+				frame.add(c);
+				c.setVisible(true);
+			} else if (effects.getSelection() == square.getModel()) {
+				Square c = new Square();
+				frame.add(c, BorderLayout.CENTER);
+				c.setVisible(true);
+			} else if (effects.getSelection() == burst.getModel()) {
+				Burst c = new Burst();
+				frame.add(c);
+				c.setVisible(true);
+			} else {
+				Bubble c = new Bubble();
+				frame.add(c);
+				c.setVisible(true);
+			}
 			// pass variables to canvas
-			// need to make it show up only when this is
+			
 		}
-		 if (e.getSource() == star) {
-			Star c = new Star();
-			frame.add(c);
-			System.out.println("star");
-		} else if (e.getSource() == circles) {
-			Circles circleCanvas = new Circles(x, y, angle);
-			frame.add(circleCanvas);
-		} else if (e.getSource() == square) {
-			Square squareCanvas = new Square();
-			frame.add(squareCanvas);			
-		} else if (e.getSource() == burst) {
-			Burst burstCanvas = new Burst();
-			frame.add(burstCanvas);
-		} else if (e.getSource() == bubble) {
-			Bubble bubbleCanvas = new Bubble();
-			frame.add(bubbleCanvas);
-		}
-		
 	}
 
 }
