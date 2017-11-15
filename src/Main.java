@@ -75,9 +75,10 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	public static final double g = 9.81;
 	// will be used for location of drawings.
 	
-	Timer time = new Timer(30, this);
-	
 	canvas draw = new canvas();
+	Timer time = new Timer(30, draw);
+	
+	
 	
 	public Main() {
 		time.setRepeats(true);
@@ -152,11 +153,9 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		
-		
 	}
 
-	public class canvas extends JPanel {
+	public class canvas extends JPanel implements ActionListener{
 		@Override
 		public void paintComponent(Graphics g) {
 			double t2 = 0;
@@ -168,8 +167,42 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 			t2+=.01;
 			if (t2 == t) {
 				time.stop();
+				//swap();
 			}
 		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			draw.repaint();
+		}
+	}
+	public void swap() {
+		x =(int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
+		y = (int) ((v * Math.sin(Math.toRadians((double)angle)) * t) - (.5*g*Math.pow(t, 2)));
+		
+		if(effects.getSelection() == circles.getModel()) {
+			Circles c = new Circles(x, y, angle);
+			c.setBackground(Color.WHITE);
+			frame.add(c, BorderLayout.CENTER);
+			c.setVisible(true);
+			c.repaint();
+		} else if (effects.getSelection() == star.getModel()) {
+			Star c = new Star();
+			frame.add(c);
+			c.setVisible(true);
+		} else if (effects.getSelection() == square.getModel()) {
+			Square c = new Square();
+			frame.add(c, BorderLayout.CENTER);
+			c.setVisible(true);
+		} else if (effects.getSelection() == burst.getModel()) {
+			Burst c = new Burst();
+			frame.add(c);
+			c.setVisible(true);
+		} else {
+			Bubble c = new Bubble();
+			frame.add(c);
+			c.setVisible(true);
+		}		
 	}
 	
 	public static void main(String[] args) {
@@ -202,33 +235,9 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fire) {
-			x =(int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
-			y = (int) ((v * Math.sin(Math.toRadians((double)angle)) * t) - (.5*g*Math.pow(t, 2)));
-			
-			if(effects.getSelection() == circles.getModel()) {
-				Circles c = new Circles(x, y, angle);
-				c.setBackground(Color.WHITE);
-				frame.add(c, BorderLayout.CENTER);
-				c.setVisible(true);
-				c.repaint();
-			} else if (effects.getSelection() == star.getModel()) {
-				Star c = new Star();
-				frame.add(c);
-				c.setVisible(true);
-			} else if (effects.getSelection() == square.getModel()) {
-				Square c = new Square();
-				frame.add(c, BorderLayout.CENTER);
-				c.setVisible(true);
-			} else if (effects.getSelection() == burst.getModel()) {
-				Burst c = new Burst();
-				frame.add(c);
-				c.setVisible(true);
-			} else {
-				Bubble c = new Bubble();
-				frame.add(c);
-				c.setVisible(true);
-			}
 			time.start();
+			frame.add(draw, BorderLayout.CENTER);
+			draw.setVisible(true);
 		} else if (e.getSource() == time) {
 			draw.repaint();
 		}
