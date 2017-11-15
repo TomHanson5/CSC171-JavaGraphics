@@ -3,11 +3,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.awt.geom.Ellipse2D.Double;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -76,7 +77,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 	
 	Timer time = new Timer(30, this);
 	
-	
+	canvas draw = new canvas();
 	
 	public Main() {
 		time.setRepeats(true);
@@ -151,12 +152,23 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		
+		
 	}
 
-	public class drawer extends JPanel {
+	public class canvas extends JPanel {
 		@Override
 		public void paintComponent(Graphics g) {
-			
+			double t2 = 0;
+			Graphics2D g2 = (Graphics2D) g;
+			double x2 = ( v * Math.cos(Math.toRadians((double)angle)) * t2);
+			double y2 = (v * Math.sin(Math.toRadians((double)angle)) * t2) - (.5*Main.g*Math.pow(t2, 2));
+			Double s = new Double(x2-20, this.getHeight() - y2-20, 20, 20);
+			g2.draw(s);
+			t2+=.01;
+			if (t2 == t) {
+				time.stop();
+			}
 		}
 	}
 	
@@ -167,7 +179,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -218,7 +230,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener, Item
 			}
 			time.start();
 		} else if (e.getSource() == time) {
-			
+			draw.repaint();
 		}
 		
 	}
