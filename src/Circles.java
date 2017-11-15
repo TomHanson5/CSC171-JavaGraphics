@@ -7,17 +7,17 @@ import javax.swing.JPanel;
 public class Circles extends JPanel{
 	// issue in here, not printing, not sure why
 	
-	double x, y;
+	int x, y;
 	int angle;
 	boolean boom = false;
-	final int r = 5;
+	final int r = 10;
 	Color c = Color.BLACK;
 	
-	public Circles(double x, double y, int angle) {
-		this.x = x;
-		this.y = y;
+	public Circles(int W, int H, int angle) {
+		this.x = W;
+		this.y =  H;
 		this.angle = angle;
-		
+		this.repaint();
 	} 
 	
 	public void Boom() {
@@ -27,24 +27,26 @@ public class Circles extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		System.out.println("yes");
+		y = this.getHeight() - y;
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(c);
-		int x2 = 0;
-		int y2 = 0;
-		for (int i = 0; i < x; i++) {
-			g2.fillOval(x2-r, y2-r, r*2, r*2);
-			if (y2 > y) {
-				y--;
-				x++;
-			} else if (y2 < y){
-				x2++;
-				y2++;
-			}
-			
+		//Graphics2D g2 = (Graphics2D) g;
+		g.setColor(c);
+		g.drawLine(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+		g.drawLine(this.getWidth()/2, 0, this.getWidth()/2, this.getHeight());
+		double mid = (Main.v*Math.sin(Math.toRadians(angle)))/Main.g;
+		int y2 = (int) (Main.v*Math.sin(Math.toRadians(angle))*mid - ((.5)*Main.g*mid*mid)); // max height
+		g.drawOval((int)x-100, (int)y-100, 200, 200);
+		g.fillOval(x-2, y-2, 4, 4);
+		int start;
+		if (x > mid) {
+			start = 90 + (int)Math.abs(Math.toDegrees(Math.atan2(x-mid, (double)y)));
+		} else if (x < mid) {
+			start = (int)Math.abs(Math.toDegrees(Math.atan2(mid - x, (double)y)));
+		} else {
+			start = 90;
 		}
-		
+		System.out.println(start);
+		g.drawArc(0, y2,(int) (2*(mid*Main.v*Math.cos(Math.toRadians(angle)))), 2*y2, start, 180-start);
 		if (boom) {
 			// draw resulting effect
 		} 
