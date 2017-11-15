@@ -5,15 +5,10 @@ import java.awt.geom.QuadCurve2D;
 import javax.swing.JPanel;
 
 public class Circles extends JPanel{
-	
-	int x, y;
-	int angle;
-	
 	@Override
 	public void paintComponent(Graphics g) {
-		this.x = Main.x;
-		this.y =  Main.y;
-		this.angle = Main.angle;
+		int x = Main.x;
+		int y =  Main.y;
 		y = this.getHeight() - y;
 		super.paintComponent(g);
 		g.setColor(Main.colorChoice);

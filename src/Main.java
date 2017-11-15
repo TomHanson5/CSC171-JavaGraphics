@@ -50,8 +50,8 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	JRadioButton star = new JRadioButton("Star");
 	JRadioButton circles = new JRadioButton("Circles");
 	JRadioButton square = new JRadioButton("Square");
-	JRadioButton burst = new JRadioButton("Burst");
-	JRadioButton bubble = new JRadioButton("Split");
+	JRadioButton flower = new JRadioButton("Flower");
+	JRadioButton bubble = new JRadioButton("Bubble");
 	
 	JFrame frame = new JFrame("Main");
 	JPanel colorGUI = new JPanel();
@@ -69,7 +69,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	// will be used for location of drawings.
 
 	Bubble bub = new Bubble();
-	Burst bur = new Burst();
+	Flower flw = new Flower();
 	Square squ = new Square();
 	Star str = new Star();
 	Circles c = new Circles();
@@ -86,7 +86,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		effects.add(star);
 		effects.add(circles);
 		effects.add(square);
-		effects.add(burst);
+		effects.add(flower);
 		effects.add(bubble);
 		
 		frame.setLayout(new BorderLayout());
@@ -110,7 +110,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		effectGUI.add(star);
 		effectGUI.add(circles);
 		effectGUI.add(square);
-		effectGUI.add(burst);
+		effectGUI.add(flower);
 		effectGUI.add(bubble);
 		topGUI.add(effectGUI);
 		frame.add(topGUI, BorderLayout.PAGE_START);
@@ -172,7 +172,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 		frame.remove(c);
 		frame.remove(str);
 		frame.remove(squ);
-		frame.remove(bur);
+		frame.remove(flw);
 		frame.remove(bub);
 	}
 	
@@ -192,9 +192,9 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 			} else if (effects.getSelection() == square.getModel()) {
 				frame.add(squ);
 				squ.setVisible(true);
-			} else if (effects.getSelection() == burst.getModel()) {
-				frame.add(bur);
-				bur.setVisible(true);
+			} else if (effects.getSelection() == flower.getModel()) {
+				frame.add(flw);
+				flw.setVisible(true);
 			} else {
 				frame.add(bub);
 				bub.setVisible(true);
