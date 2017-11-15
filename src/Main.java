@@ -25,7 +25,7 @@ import javax.swing.event.ChangeListener;
 // then each time draw a circle for the track, stop when both current x and y are equal to or greater than the explosion x and y
 public class Main extends JFrame implements ActionListener, ChangeListener{
 	Color[] colorRef = {Color.BLACK, Color.BLUE, Color.CYAN, Color.PINK, Color.GREEN, Color.ORANGE, Color.RED};
-	Color colorChoice;
+	static Color colorChoice;
 	
 	ButtonGroup colors = new ButtonGroup();
 	JRadioButton black = new JRadioButton("Black");
@@ -64,7 +64,7 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 	public static int x, y;
 	public static int t = 1; // Time to Boom
 	public static int angle = 45;
-	public static int v = 1000; // speed
+	public static int v = 500; // speed
 	public static final double g = 9.81;
 	// will be used for location of drawings.
 
@@ -154,7 +154,6 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		System.out.println(e.getSource());
 		if (e.getSource() == timeSel) {
 			t = timeSel.getValue();
 			timeCount.setText(Integer.toString(timeSel.getValue()));
@@ -163,23 +162,30 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 			angle = fireAngle.getValue();
 		} else {
 			speedCount.setText(Integer.toString(speed.getValue()));
-			v =20* speed.getValue();
+			v =10* speed.getValue();
 		}
 		
 	}
 
+	public void removeParts() {
+		frame.setVisible(false);
+		frame.remove(c);
+		frame.remove(str);
+		frame.remove(squ);
+		frame.remove(bur);
+		frame.remove(bub);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fire) {
 			x = (int) ( v * Math.cos(Math.toRadians((double)angle)) * t);
 			y = (int) ((v * Math.sin(Math.toRadians((double)angle)) * t) - (.5*g*Math.pow(t, 2)));
 			
+			removeParts();
 			if(effects.getSelection() == circles.getModel()) {
-				c.setBackground(Color.WHITE);
 				frame.add(c);
-				frame.setVisible(false);
 				c.setVisible(true);
-				frame.setVisible(true);
 			} else if (effects.getSelection() == star.getModel()) {
 				frame.add(str);
 				str.setVisible(true);
@@ -193,8 +199,8 @@ public class Main extends JFrame implements ActionListener, ChangeListener{
 				frame.add(bub);
 				bub.setVisible(true);
 			}
+			frame.setVisible(true);
 		}
-		System.out.println(e.getSource());
 		
 	}
 
